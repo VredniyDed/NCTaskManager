@@ -16,11 +16,9 @@ public class ArrayTaskList {
         array[size-1] = task;
     }
 
-
     public int size() {
         return  size;
     }
-
    public Task getTask(int index){
         return array[index];
     }
