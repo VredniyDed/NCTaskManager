@@ -17,6 +17,12 @@ public class Main {
 		int[] arr2 = new int[12];
 
 		System.out.println(arr2.length);
+		int n = 10;
+		int d1[] = new int[n];
+		System.out.println(d1.length);
+		n = 3;
+		System.out.println(d1.length);
+		System.out.println(n);
 
 
 	}
