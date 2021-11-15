@@ -9,6 +9,7 @@ package ua.edu.sumdu.j2se.moroz.tasks;
 
 
 public class Task {
+
     private String title;                            //task name
     private  int time;                               //task execution time
     private int start;                               //time when task starts
@@ -24,11 +25,15 @@ public class Task {
      * @param time - task execution time
      */
 
-    public Task(String title, int time) {
-        this.title = title;
-        this.time = time;
-        isRepeated = false;
+    public Task(String title, int time){
+            if (time<0) {
+                throw new IllegalArgumentException("time<0");
+            }
+                this.title = title;
+                isRepeated = false;
+                this.time = time;
     }
+
 
     /**
      * Constructor for a repeating task
@@ -39,12 +44,24 @@ public class Task {
      * @param interval - interval between task iterations
      */
 
-    public Task(String title, int start, int end, int interval) {
-        this.title = title;
-        this.start = start;
-        this.end = end;
-        this.interval = interval;
-        isRepeated = true;
+    public Task(String title, int start, int end, int interval){
+            if (start<0) {
+                throw new IllegalArgumentException("Start time < 0");
+            }
+            else if (end < 0) {
+                throw new IllegalArgumentException("End time < 0");
+            }
+            else if (start>end){
+                throw new IllegalArgumentException("Start time > end time");
+            }
+           else if (interval<=0) {
+                throw new IllegalArgumentException("Interval <= 0");
+            }
+                this.title = title;
+                this.start = start;
+                this.end = end;
+                this.interval = interval;
+                isRepeated = true;
     }
 
     /**
@@ -92,9 +109,11 @@ public class Task {
      * @param time - task execution time
      */
     public void setTime(int time) {
+
         if (isRepeated) {
             isRepeated = false;
         }
+
         this.time = time;
     }
 
