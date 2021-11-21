@@ -1,6 +1,6 @@
 package ua.edu.sumdu.j2se.moroz.tasks;
 
-public class LinkedTaskList {
+public class LinkedTaskList extends AbstractTaskList {
 
     public class Node {
         public Task data;
@@ -12,9 +12,10 @@ public class LinkedTaskList {
     }
 
     private Node head;
-    private int size = 0;
     public LinkedTaskList() {
         head = null;
+        type = ListTypes.types.LINKED;
+        size = 0;
     }
     public void add(Task task){
         if (task == null){
@@ -76,6 +77,7 @@ public class LinkedTaskList {
      public int size (){
        return size;
      }
+
     public LinkedTaskList incoming(int from, int to){
         if (from<0){
             throw new IllegalArgumentException("from < 0");
@@ -89,7 +91,7 @@ public class LinkedTaskList {
         LinkedTaskList list = new LinkedTaskList();
         Node temp = head;
         for (int i = 0; i<size; i++){
-            if (temp.data.nextTimeAfter(from)!= -1 && temp.data.nextTimeAfter(from)<=to){
+            if (temp != null && temp.data.nextTimeAfter(from)!= -1 && temp.data.nextTimeAfter(from) < to){
                 list.add(temp.data);
             }
             temp = temp.next;

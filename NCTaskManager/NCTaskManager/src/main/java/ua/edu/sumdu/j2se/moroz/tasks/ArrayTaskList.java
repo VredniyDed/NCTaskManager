@@ -1,9 +1,13 @@
 package ua.edu.sumdu.j2se.moroz.tasks;
 
-public class ArrayTaskList {
+public class ArrayTaskList extends AbstractTaskList {
     private Task[] array = new Task[10];
-    private int size = 0;
+    private ListTypes.types type = ListTypes.types.ARRAY;
 
+    public ArrayTaskList() {
+        type = ListTypes.types.ARRAY;
+        size = 0;
+    }
     public void add(Task task){
         if (size == array.length){
             Task [] temp = array;
@@ -55,7 +59,7 @@ public class ArrayTaskList {
         }
         ArrayTaskList arr = new ArrayTaskList();
         for (int i = 0; i<size; i++){
-            if (array[i].nextTimeAfter(from)!= -1 && array[i].nextTimeAfter(from)<=to){
+            if (array[i] != null && array[i].nextTimeAfter(from)!= -1 && array[i].nextTimeAfter(from) < to){
                 arr.add(array[i]);
             }
         }
