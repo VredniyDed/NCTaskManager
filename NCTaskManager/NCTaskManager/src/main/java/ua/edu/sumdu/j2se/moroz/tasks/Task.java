@@ -1,4 +1,7 @@
 package ua.edu.sumdu.j2se.moroz.tasks;
+
+import java.util.Objects;
+
 /**
  * The Task class implements the functionality
  * of the task manager with repetitive and non-repetitive tasks
@@ -8,7 +11,7 @@ package ua.edu.sumdu.j2se.moroz.tasks;
  */
 
 
-public class Task {
+public class Task implements Cloneable{
 
     private String title;                            //task name
     private  int time;                               //task execution time
@@ -32,6 +35,7 @@ public class Task {
                 this.title = title;
                 isRepeated = false;
                 this.time = time;
+//                active = true;
     }
 
 
@@ -62,6 +66,7 @@ public class Task {
                 this.end = end;
                 this.interval = interval;
                 isRepeated = true;
+//                active = true;
     }
 
     /**
@@ -109,6 +114,9 @@ public class Task {
      * @param time - task execution time
      */
     public void setTime(int time) {
+        if (time<0) {
+            throw new IllegalArgumentException(" time < 0");
+        }
 
         if (isRepeated) {
             isRepeated = false;
@@ -182,6 +190,18 @@ public class Task {
      * @param interval - interval between task iterations
      */
     public void setTime (int start, int end, int interval){
+        if (start<0) {
+            throw new IllegalArgumentException("Start time < 0");
+        }
+        else if (end < 0) {
+            throw new IllegalArgumentException("End time < 0");
+        }
+        else if (start>end){
+            throw new IllegalArgumentException("Start time > end time");
+        }
+        else if (interval<=0) {
+            throw new IllegalArgumentException("Interval <= 0");
+        }
         if (!isRepeated){
             isRepeated = true;
         }
@@ -197,7 +217,6 @@ public class Task {
      */
 
     public boolean isRepeated(){
-
         return isRepeated;
     }
 
@@ -210,6 +229,7 @@ public class Task {
      */
 
     public int nextTimeAfter(int current){
+
         if (!active){                                            //check if task is active
             return -1;
         }
@@ -225,11 +245,48 @@ public class Task {
             if (current < start) {                              //compare current time with start time
                 return start;
             }
-            for (int i = start; i<= end; i+= interval)      //compare current time with each task iteration
+            for (int i = start; i <= end; i += interval)      //compare current time with each task iteration
                 if (current < i) {
                     return i;
                 }
         }
         return  -1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return time == task.time && start == task.start && end == task.end && interval == task.interval && active == task.active
+                && isRepeated == task.isRepeated && title.equals(task.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, time, start, end, interval, active, isRepeated);
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "title='" + title + '\'' +
+                ", time=" + time +
+                ", start=" + start +
+                ", end=" + end +
+                ", interval=" + interval +
+                ", active=" + active +
+                ", isRepeated=" + isRepeated +
+                '}';
+    }
+
+    @Override
+    public Task clone() throws CloneNotSupportedException {
+        Task cl;
+        if (isRepeated){
+            cl = new Task(title,start,end,interval);
+        }
+        else cl = new Task(title,time);
+        return cl;
     }
 }
