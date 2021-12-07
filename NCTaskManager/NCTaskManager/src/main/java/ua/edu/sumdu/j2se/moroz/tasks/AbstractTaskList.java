@@ -1,5 +1,7 @@
 package ua.edu.sumdu.j2se.moroz.tasks;
 
+import java.util.stream.Stream;
+
 abstract class AbstractTaskList  implements Cloneable, Iterable<Task>{
     public abstract int size();
     public abstract void add(Task task);
@@ -7,7 +9,7 @@ abstract class AbstractTaskList  implements Cloneable, Iterable<Task>{
     public abstract boolean remove(Task task);
     protected ListTypes.types type;
     protected int size;
-    public AbstractTaskList incoming(int from, int to){
+    public final AbstractTaskList incoming(int from, int to){
         if (from<0){
             throw new IllegalArgumentException("from < 0");
         }
@@ -18,14 +20,11 @@ abstract class AbstractTaskList  implements Cloneable, Iterable<Task>{
             throw new IllegalArgumentException("from >= tp");
         }
         AbstractTaskList arr = TaskListFactory.createTaskList(type) ;
-        for (int i = 0; i<size; i++){
-            if (getTask(i) != null && getTask(i).nextTimeAfter(from) != -1 && getTask(i).nextTimeAfter(from) < to){
-                arr.add(getTask(i));
-            }
-        }
+        this.getStream().filter(t -> t != null && t.nextTimeAfter(from) != -1 && t.nextTimeAfter(from) < to).forEach(arr :: add);
         return arr;
     }
 
+    public abstract Stream<Task> getStream();
     @Override
     public int hashCode() {
         return super.hashCode();
