@@ -3,6 +3,7 @@ package ua.edu.sumdu.j2se.moroz.tasks;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class LinkedTaskList extends AbstractTaskList  {
 
@@ -76,26 +77,6 @@ public class LinkedTaskList extends AbstractTaskList  {
     public int size() {
         return size;
     }
-    public LinkedTaskList incoming(int from, int to) {
-        if (from < 0) {
-            throw new IllegalArgumentException("from < 0");
-        }
-        if (to < 0) {
-            throw new IllegalArgumentException("to < 0");
-        }
-        if (from >= to) {
-            throw new IllegalArgumentException("from >= tp");
-        }
-        LinkedTaskList list = new LinkedTaskList();
-        Node temp = head;
-        for (int i = 0; i < size; i++) {
-            if (temp != null && temp.data.nextTimeAfter(from) != -1 && temp.data.nextTimeAfter(from) < to) {
-                list.add(temp.data);
-            }
-            temp = temp.next;
-        }
-        return list;
-    }
 
     @Override
     public Iterator<Task> iterator() {
@@ -165,4 +146,12 @@ public class LinkedTaskList extends AbstractTaskList  {
                 '}';
     }
 
+    @Override
+    public Stream<Task> getStream() {
+        Stream.Builder<Task> builder = Stream.builder();
+        for (int i = 0; i < size; i++){
+            builder.add(getTask(i));
+        }
+        return builder.build();
+    }
 }

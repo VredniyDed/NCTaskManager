@@ -1,6 +1,7 @@
 package ua.edu.sumdu.j2se.moroz.tasks;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class ArrayTaskList extends AbstractTaskList {
     private Task[] array = new Task[10];
@@ -45,24 +46,8 @@ public class ArrayTaskList extends AbstractTaskList {
         }
         return false;
     }
-    public ArrayTaskList incoming(int from, int to){
-        if (from<0){
-            throw new IllegalArgumentException("from < 0");
-        }
-        if (to < 0){
-            throw new IllegalArgumentException("to < 0");
-        }
-        if (from >= to){
-            throw new IllegalArgumentException("from >= tp");
-        }
-        ArrayTaskList arr = new ArrayTaskList();
-        for (int i = 0; i<size; i++){
-            if (array[i] != null && array[i].nextTimeAfter(from)!= -1 && array[i].nextTimeAfter(from) < to){
-                arr.add(array[i]);
-            }
-        }
-        return arr;
-    }
+
+
 
     @Override
     public Iterator<Task> iterator() {
@@ -134,6 +119,11 @@ public class ArrayTaskList extends AbstractTaskList {
                 ", array=" + Arrays.toString(array) +
                 ", type=" + type +
                 '}';
+    }
+
+    @Override
+    public Stream<Task> getStream() {
+        return Arrays.stream(array);
     }
 }
 
