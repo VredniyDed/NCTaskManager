@@ -9,20 +9,21 @@ abstract class AbstractTaskList  implements Cloneable, Iterable<Task>{
     public abstract boolean remove(Task task);
     protected ListTypes.types type;
     protected int size;
-    public final AbstractTaskList incoming(int from, int to){
-        if (from<0){
-            throw new IllegalArgumentException("from < 0");
-        }
-        if (to < 0){
-            throw new IllegalArgumentException("to < 0");
-        }
-        if (from >= to){
-            throw new IllegalArgumentException("from >= tp");
-        }
-        AbstractTaskList arr = TaskListFactory.createTaskList(type) ;
-        this.getStream().filter(t -> t != null && t.nextTimeAfter(from) != -1 && t.nextTimeAfter(from) < to).forEach(arr :: add);
-        return arr;
-    }
+//    public final AbstractTaskList incoming(int from, int to){
+//        if (from<0){
+//            throw new IllegalArgumentException("from < 0");
+//        }
+//        if (to < 0){
+//            throw new IllegalArgumentException("to < 0");
+//        }
+//        if (from >= to){
+//            throw new IllegalArgumentException("from >= tp");
+//        }
+//        AbstractTaskList arr = TaskListFactory.createTaskList(type) ;
+//
+//        this.getStream().filter(t -> t != null && t.nextTimeAfter(from) != -1 && t.nextTimeAfter(from) < to).forEach(arr :: add);
+//        return arr;
+//    }
 
     public abstract Stream<Task> getStream();
     @Override

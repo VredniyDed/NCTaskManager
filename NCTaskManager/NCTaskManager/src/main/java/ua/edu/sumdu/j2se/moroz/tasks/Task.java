@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.moroz.tasks;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -14,9 +15,9 @@ import java.util.Objects;
 public class Task implements Cloneable{
 
     private String title;                            //task name
-    private  int time;                               //task execution time
-    private int start;                               //time when task starts
-    private int end;                                 //time when task ends
+    private LocalDateTime time;                               //task execution time
+    private LocalDateTime start;                               //time when task starts
+    private LocalDateTime end;                                 //time when task ends
     private int interval;                            //interval between task iterations
     private boolean active;                          //task activity status
     private boolean isRepeated;                      //task recurrence status
@@ -28,8 +29,8 @@ public class Task implements Cloneable{
      * @param time - task execution time
      */
 
-    public Task(String title, int time){
-            if (time<0) {
+    public Task(String title, LocalDateTime time){
+            if (time == null) {
                 throw new IllegalArgumentException("time<0");
             }
                 this.title = title;
@@ -48,14 +49,14 @@ public class Task implements Cloneable{
      * @param interval - interval between task iterations
      */
 
-    public Task(String title, int start, int end, int interval){
-            if (start<0) {
+    public Task(String title, LocalDateTime start, LocalDateTime end, int interval){
+            if (start==null) {
                 throw new IllegalArgumentException("Start time < 0");
             }
-            else if (end < 0) {
+            else if (end ==null) {
                 throw new IllegalArgumentException("End time < 0");
             }
-            else if (start>end){
+            else if (start==null){
                 throw new IllegalArgumentException("Start time > end time");
             }
            else if (interval<=0) {
@@ -113,8 +114,8 @@ public class Task implements Cloneable{
      *
      * @param time - task execution time
      */
-    public void setTime(int time) {
-        if (time<0) {
+    public void setTime(LocalDateTime time) {
+        if (time==null) {
             throw new IllegalArgumentException(" time < 0");
         }
 
@@ -131,7 +132,7 @@ public class Task implements Cloneable{
      *
      * @return int - task execution time
      */
-    public int getTime() {
+    public LocalDateTime getTime() {
         if (isRepeated) {
             return start;
         }
@@ -145,7 +146,7 @@ public class Task implements Cloneable{
      * @return int - time when task starts for repeating task
      * or execution time for non-repeating task
      */
-    public int getStartTime() {
+    public LocalDateTime getStartTime() {
         if (!isRepeated) {
             return time;
         }
@@ -159,7 +160,7 @@ public class Task implements Cloneable{
      * @return int - time when task ends for repeating task
      * or execution time for non-repeating task
      */
-    public int getEndTime() {
+    public LocalDateTime getEndTime() {
         if (!isRepeated) {
             return time;
         }
@@ -189,14 +190,14 @@ public class Task implements Cloneable{
      * @param end - time when task ends
      * @param interval - interval between task iterations
      */
-    public void setTime (int start, int end, int interval){
-        if (start<0) {
+    public void setTime (LocalDateTime start, LocalDateTime end, int interval){
+        if (start==null) {
             throw new IllegalArgumentException("Start time < 0");
         }
-        else if (end < 0) {
+        else if (end == null) {
             throw new IllegalArgumentException("End time < 0");
         }
-        else if (start>end){
+        else if (start.isAfter(end)){
             throw new IllegalArgumentException("Start time > end time");
         }
         else if (interval<=0) {
@@ -228,29 +229,35 @@ public class Task implements Cloneable{
      * @return int - the next execution time
      */
 
-    public int nextTimeAfter(int current){
-
+    public LocalDateTime nextTimeAfter(LocalDateTime current){
+        if (current == null) return  null;
         if (!active){                                            //check if task is active
-            return -1;
+            return null;
         }
+
         if (!isRepeated){                                        //for non-repeated task
-            if (current < time) {                                //compare current time with execution time
+            if (current.isBefore(time)) {                                //compare current time with execution time
                 return time;
             }
             else {
-                return -1;
+                return null;
             }
         }
         else  {                                                  //for non-repeated task
-            if (current < start) {                              //compare current time with start time
+            if (current.isBefore(start)) {
+                                                        //compare current time with start time
                 return start;
             }
-            for (int i = start; i <= end; i += interval)      //compare current time with each task iteration
-                if (current < i) {
-                    return i;
+
+            for (LocalDateTime i = start; !i.isAfter(end); ) {
+                if (current.isBefore(i)) {
+                    return  i;
                 }
+                i = i.plusSeconds(interval);
+            }
+
         }
-        return  -1;
+        return  null;
     }
 
     @Override
